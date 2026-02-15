@@ -1,0 +1,187 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-language-learning-single-page-web-app-with-core-navigation-and-screens-home-dashboard-practice-vocabulary-and-settings",
+      "featureTitle": "Create a language-learning single-page web app with core navigation and screens: Home/Dashboard, Practice, Vocabulary, and Settings.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/layout/AppLayout.tsx",
+        "frontend/src/components/nav/TopNav.tsx",
+        "frontend/src/main.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/PracticePage.tsx",
+        "frontend/src/pages/SettingsPage.tsx",
+        "frontend/src/pages/VocabularyPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-internet-identity-sign-in-and-show-a-signed-in-experience-that-personalizes-the-app-e-g-shows-the-active-learning-language-and-progress",
+      "featureTitle": "Implement Internet Identity sign-in and show a signed-in experience that personalizes the app (e.g., shows the active learning language and progress).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/AuthGate.tsx",
+        "frontend/src/components/auth/LoginButton.tsx",
+        "frontend/src/components/auth/ProfileSetupModal.tsx",
+        "frontend/src/components/user/UserBadge.tsx",
+        "frontend/src/hooks/useActor.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-vocabulary-feature-that-lets-users-add-edit-and-delete-vocabulary-entries-word-phrase-translation-optional-notes-tags-and-view-them-in-a-searchable-filterable-list",
+      "featureTitle": "Build a Vocabulary feature that lets users add, edit, and delete vocabulary entries (word/phrase, translation, optional notes, tags), and view them in a searchable/filterable list.",
+      "files": [
+        "frontend/src/components/vocabulary/DeleteVocabularyConfirmDialog.tsx",
+        "frontend/src/components/vocabulary/VocabularyFormDialog.tsx",
+        "frontend/src/components/vocabulary/VocabularyList.tsx",
+        "frontend/src/pages/VocabularyPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-practice-flow-that-generates-short-exercises-from-the-user-s-vocabulary-and-provides-immediate-feedback-include-at-least-1-translation-prompt-answer-and-2-fill-in-the-blank-from-a-template-sentence",
+      "featureTitle": "Create a Practice flow that generates short exercises from the user’s vocabulary and provides immediate feedback. Include at least: (1) translation (prompt -> answer), and (2) fill-in-the-blank from a template sentence.",
+      "files": [
+        "frontend/src/components/practice/PracticeCard.tsx",
+        "frontend/src/pages/PracticePage.tsx",
+        "frontend/src/types/practice.ts",
+        "frontend/src/utils/practice/generateExercises.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-an-ai-inspired-tutor-feedback-panel-that-explains-mistakes-using-deterministic-heuristics-e-g-normalization-typo-tolerance-simple-grammar-word-order-hints-without-calling-any-external-llm-or-third-party-ai-apis",
+      "featureTitle": "Implement an AI-inspired “Tutor” feedback panel that explains mistakes using deterministic heuristics (e.g., normalization, typo tolerance, simple grammar/word-order hints) without calling any external LLM or third-party AI APIs.",
+      "files": [
+        "frontend/src/components/practice/PracticeCard.tsx",
+        "frontend/src/components/practice/TutorPanel.tsx",
+        "frontend/src/utils/tutor/editDistance.ts",
+        "frontend/src/utils/tutor/feedback.ts",
+        "frontend/src/utils/tutor/normalize.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-progress-dashboard-view-showing-daily-practice-count-accuracy-and-a-simple-review-queue-size-items-due-based-on-lastseen-and-performance",
+      "featureTitle": "Add a Progress/Dashboard view showing daily practice count, accuracy, and a simple review queue size (items due based on lastSeen and performance).",
+      "files": [
+        "frontend/src/components/dashboard/MetricsCards.tsx",
+        "frontend/src/hooks/useDashboardMetrics.ts",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-one-coherent-creative-visual-theme-across-the-app-colors-typography-components-suitable-for-a-language-learning-product-avoiding-blue-purple-as-the-primary-palette-unless-explicitly-requested-later",
+      "featureTitle": "Apply one coherent, creative visual theme across the app (colors, typography, components) suitable for a language-learning product, avoiding blue/purple as the primary palette unless explicitly requested later.",
+      "files": [
+        "frontend/src/components/layout/AppLayout.tsx",
+        "frontend/src/components/nav/TopNav.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-generated-static-visual-assets-logo-hero-illustration-and-render-them-in-the-app-e-g-on-the-home-dashboard-and-or-sign-in-screen-from-frontend-public-assets-generated",
+      "featureTitle": "Add generated static visual assets (logo + hero illustration) and render them in the app (e.g., on the Home/Dashboard and/or sign-in screen) from frontend/public/assets/generated.",
+      "files": [
+        "frontend/src/components/auth/AuthGate.tsx",
+        "frontend/src/components/branding/BrandHeader.tsx",
+        "frontend/src/components/branding/HeroIllustration.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

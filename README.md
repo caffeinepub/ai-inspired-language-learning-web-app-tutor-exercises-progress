@@ -1,2 +1,3 @@
-# ai-inspired-language-learning-web-app-tutor-exercises-progress
-Exported from Caffeine project: AI-inspired language learning web app (Tutor, exercises, progress)
+## AI-inspired language learning web app (Tutor, exercises, progress)
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
