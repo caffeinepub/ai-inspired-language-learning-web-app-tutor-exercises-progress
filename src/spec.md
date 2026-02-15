@@ -1,17 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Build a single-page language-learning web app with Internet Identity sign-in, vocabulary management, practice exercises with deterministic “Tutor” feedback, and a progress dashboard, using a cohesive non-blue/purple theme.
+**Goal:** Add a deterministic Conversation Practice mode for authenticated users to practice short, turn-based text conversations using their existing vocabulary, with per-turn tutor feedback and vocab stats updates.
 
 **Planned changes:**
-- Create SPA navigation and screens: Home/Dashboard, Practice, Vocabulary, Settings with responsive layouts and clear empty states.
-- Add Internet Identity authentication with signed-in/signed-out UI states, user identifier display, and sign-out that clears cached UI data.
-- Implement a single Motoko backend actor with per-user persisted models for language settings, vocabulary (with stats), and practice history; expose methods to get/update settings and CRUD vocabulary.
-- Build Vocabulary feature: add/edit/delete entries (word/phrase, translation, optional notes, tags) plus searchable list and tag filtering.
-- Build Practice flow: session-based, one question at a time, at least two exercise types (translation and fill-in-the-blank), immediate feedback, and backend updates to per-item stats.
-- Add AI-inspired Tutor panel with deterministic heuristics (normalization, typo tolerance, difference hinting) and no external AI/LLM calls.
-- Add Dashboard metrics derived from persisted data: today’s answered count, accuracy %, and items due for review; include empty state guidance.
-- Apply a coherent visual theme across the app using Tailwind utilities and shadcn components by composition (no edits to immutable UI source files), avoiding blue/purple as primary.
-- Add and render generated static assets (logo + hero illustration) from `frontend/public/assets/generated` on the landing/dashboard/sign-in experience.
+- Add a new protected route at `/conversation` (behind the existing AuthGate) with a chat-style, turn-based UI including start/reset and clear “Learner vs Partner” turn indication.
+- Generate conversation prompts and acceptable expected replies deterministically from the user’s saved vocabulary (and optional notes) without calling external APIs.
+- Reuse existing deterministic tutor heuristics to evaluate each learner reply, display correct/incorrect feedback with hints in the current TutorPanel style/tone, and submit pass/fail via the existing practice-result flow tied to the vocabulary item used for that turn.
+- Add discovery entry points: a “Conversation” link in top navigation (desktop/mobile with active state) and a new dashboard quick action linking to `/conversation`.
+- Show an actionable empty state on `/conversation` when vocabulary is empty, linking users to `/vocabulary`.
 
-**User-visible outcome:** Users can sign in with Internet Identity, set learning languages, manage vocabulary, practice with two exercise types and Tutor feedback, and view basic progress metrics; the app is responsive, themed, and includes a logo and hero illustration.
+**User-visible outcome:** Signed-in users can open “Conversation” to practice short, turn-based text chats generated from their vocabulary, receive immediate tutor feedback each turn, and have their vocabulary stats update automatically; users without vocabulary are directed to add words first.

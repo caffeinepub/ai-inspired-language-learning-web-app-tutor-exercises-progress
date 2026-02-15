@@ -1,108 +1,61 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T02:02:19.958Z",
-  "summary": "Diff adds a new Motoko backend actor with user profile + vocabulary types and several frontend screens/components for auth-gated navigation, vocabulary CRUD UI, practice UI with tutor panel, and dashboard metrics. However, some requirements cannot be confirmed due to truncation/omitted files, and some key acceptance criteria appear unimplemented (notably vocabulary edit + tag filtering, and stable persistence).",
+  "generatedAt": "2026-02-15T02:40:33.586Z",
+  "summary": "Diff adds a new deterministic Conversation Practice page and generator, wires a /conversation route, and exposes it in top nav and dashboard. Per-turn feedback uses existing deterministic tutor heuristics and submits pass/fail via existing submitPracticeResult. Some REQ-10 UI/behavior items (AuthGate protection, empty-state link, turn indicator) cannot be fully confirmed due to truncation of ConversationPage.tsx.",
   "missing_requirements": [
     {
-      "id": "REQ-3",
-      "requirement": "Persist user learning state in stable storage so data remains available across page refresh and sessions.",
-      "reason": "backend/main.mo shows an in-memory Map `storedUsers = Map.empty<Principal, UserProfile>()` and no visible `stable` variables or preupgrade/postupgrade logic in the provided excerpt; persistence cannot be confirmed from the diff summary.",
+      "id": "REQ-10",
+      "requirement": "Route \"/conversation\" is protected by the existing AuthGate behavior (unauthenticated users see the landing experience).",
+      "reason": "ConversationPage imports AuthGate, but the provided truncated content does not show it actually wrapping the page content; App route itself is not wrapped with AuthGate (it renders ConversationPage directly).",
       "evidence": [
-        "backend/main.mo (truncated)"
+        "frontend/src/App.tsx",
+        "frontend/src/pages/ConversationPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-4",
-      "requirement": "Allow users to edit existing vocabulary entries and have the list reflect changes after save.",
-      "reason": "VocabularyFormDialog accepts `editItem`, but it only uses `useAddVocabularyItem()` and calls `actor.addVocabularyItem(...)` regardless of edit mode; no update/edit mutation/hook is shown.",
+      "id": "REQ-10",
+      "requirement": "When vocabulary is empty, the Conversation page shows an actionable empty state linking to \"/vocabulary\".",
+      "reason": "ConversationPage computes `hasVocabulary` and checks `if (vocabulary.length === 0) return;` in turn generation, but the truncated diff does not show any rendered empty-state UI with a Link to \"/vocabulary\".",
       "evidence": [
-        "frontend/src/components/vocabulary/VocabularyFormDialog.tsx (truncated)",
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/pages/ConversationPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-4",
-      "requirement": "Support filtering the vocabulary list by tag (if tags are used).",
-      "reason": "VocabularyList renders tags as badges but only implements free-text search; there is no UI/state for selecting a tag filter and no filtering logic by tag.",
+      "id": "REQ-10",
+      "requirement": "Conversation page provides a visible indication of whose turn it is (Learner vs Partner).",
+      "reason": "State includes `isWaitingForUser` and message roles, but the truncated diff does not show UI elements explicitly indicating current turn ownership.",
       "evidence": [
-        "frontend/src/components/vocabulary/VocabularyList.tsx"
+        "frontend/src/pages/ConversationPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-7",
-      "requirement": "Dashboard shows daily practice count derived from persisted backend practice history (today’s answered count).",
-      "reason": "useDashboardMetrics uses `profile.practiceCounter` directly as `todayCount`; there is no visible date-based practice history model or “today” calculation in the shown frontend code.",
+      "id": "REQ-10",
+      "requirement": "Conversation page provides a clear start/reset flow.",
+      "reason": "Functions `startConversation` and `resetConversation` exist, but the truncated diff does not show the actual rendered controls/buttons or UX flow.",
       "evidence": [
-        "frontend/src/hooks/useDashboardMetrics.ts"
+        "frontend/src/pages/ConversationPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-9",
-      "requirement": "Generated static images (logo + hero) exist under frontend/public/assets/generated and are referenced by the frontend.",
-      "reason": "Frontend references the expected paths, but the diff summary does not show the image files being added (likely omitted/binary), so existence under `frontend/public/assets/generated` cannot be verified from provided evidence.",
+      "id": "REQ-12",
+      "requirement": "User sees feedback in-app consistent with current TutorPanel style/copy tone (English).",
+      "reason": "ConversationPage imports TutorPanel and constructs feedback messages, but the truncated diff does not show how TutorPanel is rendered or whether the feedback presentation matches the existing TutorPanel pattern.",
       "evidence": [
-        "frontend/src/components/branding/BrandHeader.tsx",
-        "frontend/src/components/branding/HeroIllustration.tsx"
+        "frontend/src/pages/ConversationPage.tsx (truncated)"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "Admin/access-control initialization via secret URL parameter and backend authorization mixins.",
-      "reason": "BuildRequest does not request role-based access control, admin tokens, or secret-parameter initialization; it only requires per-principal data separation.",
-      "evidence": [
-        "backend/main.mo (truncated)",
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "Footer attribution/link to caffeine.ai with UTM parameters.",
-      "reason": "Not requested in BuildRequest requirements or constraints.",
-      "evidence": [
-        "frontend/src/components/layout/AppLayout.tsx"
-      ]
-    }
-  ],
-  "confidence": 0.68,
+  "hallucinated_features": [],
+  "confidence": 0.62,
   "changed_files": [
-    "all_files_summary.json",
-    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
     "frontend/src/App.tsx",
-    "frontend/src/components/auth/AuthGate.tsx",
-    "frontend/src/components/auth/LoginButton.tsx",
-    "frontend/src/components/auth/ProfileSetupModal.tsx",
-    "frontend/src/components/branding/BrandHeader.tsx",
-    "frontend/src/components/branding/HeroIllustration.tsx",
-    "frontend/src/components/dashboard/MetricsCards.tsx",
-    "frontend/src/components/layout/AppLayout.tsx",
     "frontend/src/components/nav/TopNav.tsx",
-    "frontend/src/components/practice/PracticeCard.tsx",
-    "frontend/src/components/practice/TutorPanel.tsx",
-    "frontend/src/components/user/UserBadge.tsx",
-    "frontend/src/components/vocabulary/DeleteVocabularyConfirmDialog.tsx",
-    "frontend/src/components/vocabulary/VocabularyFormDialog.tsx",
-    "frontend/src/components/vocabulary/VocabularyList.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useDashboardMetrics.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
+    "frontend/src/pages/ConversationPage.tsx",
     "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/PracticePage.tsx",
-    "frontend/src/pages/SettingsPage.tsx",
-    "frontend/src/pages/VocabularyPage.tsx",
-    "frontend/src/types/practice.ts",
-    "frontend/src/utils/practice/generateExercises.ts",
-    "frontend/src/utils/tutor/editDistance.ts",
+    "frontend/src/utils/conversation/generateConversationTurns.ts",
     "frontend/src/utils/tutor/feedback.ts",
-    "frontend/src/utils/tutor/normalize.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

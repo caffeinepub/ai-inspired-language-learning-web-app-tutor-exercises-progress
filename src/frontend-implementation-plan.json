@@ -1,310 +1,74 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "AI-inspired language learning SPA (frontend: navigation, II auth UX, vocab/practice/progress, theme, assets)",
+  "title": "Deterministic Conversation Practice mode (chat UI + tutor feedback)",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create SPA shell with top-level navigation and responsive screens (Dashboard, Practice, Vocabulary, Settings) with clear empty states.",
+      "id": "REQ-10",
+      "summary": "Add a new authenticated Conversation Practice route with deterministic turn-based chat generated from the user’s vocabulary (no external APIs).",
       "acceptanceCriteria": [
-        "App loads successfully and shows a top-level navigation to Home/Dashboard, Practice, Vocabulary, and Settings.",
-        "Each screen has a clear header and empty-state content explaining what the user can do next.",
-        "All screens are responsive (mobile + desktop) and use consistent layout spacing."
+        "A new route exists at \"/conversation\" and is protected by the existing AuthGate behavior (unauthenticated users see the landing experience).",
+        "The Conversation page provides a chat-style UI with a clear start/reset flow and a visible indication of whose turn it is (Learner vs Partner).",
+        "Conversation prompts and expected responses are generated deterministically from the user’s vocabulary (and optional notes), without calling any external APIs.",
+        "When vocabulary is empty, the Conversation page shows an actionable empty state linking to \"/vocabulary\"."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/ConversationPage.tsx",
           "operation": "create",
-          "description": "Create the SPA root with route-based navigation to Dashboard, Practice, Vocabulary, and Settings; include a shared layout and consistent spacing. Verify the component's usage instructions before implementing."
+          "description": "Create the Conversation Practice page UI: wrap content in the existing AuthGate (from the authorization component) so unauthenticated users see the landing experience; fetch vocabulary via existing query hooks; implement a chat-style, turn-based flow with Start/Reset controls, visible turn indicator (Learner vs Partner), deterministic prompt generation from vocabulary + optional notes, and an empty state that links to \"/vocabulary\" when vocabulary is empty. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "path": "frontend/src/utils/conversation/generateConversationTurns.ts",
           "operation": "create",
-          "description": "Add an app layout (header + main container) used across screens; compose shadcn-ui components (e.g., navigation container, buttons) without modifying immutable UI source files. Verify the component's usage instructions before implementing."
+          "description": "Add deterministic (non-random) conversation-turn generation utilities that derive partner prompts and expected learner replies from the current vocabulary list (and item notes when present), using stable selection (e.g., sorted item ids + turn index) and local-only logic (no external calls)."
         },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register the new \"/conversation\" route in the TanStack Router route tree and wire it to ConversationPage so it is navigable."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Expose Conversation Practice entry points in top navigation (desktop/mobile) and on the dashboard.",
+      "acceptanceCriteria": [
+        "Top navigation includes a new link labeled \"Conversation\" that routes to \"/conversation\" and shows an active state when selected (desktop and mobile nav).",
+        "Dashboard includes a new quick action card/button that links to \"/conversation\" alongside the existing Practice and Vocabulary actions."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/nav/TopNav.tsx",
-          "operation": "create",
-          "description": "Implement top navigation links for Dashboard, Practice, Vocabulary, Settings with responsive behavior; compose shadcn-ui primitives. Verify the component's usage instructions before implementing."
+          "operation": "modify",
+          "description": "Add a new nav item labeled \"Conversation\" pointing to \"/conversation\" (including an icon) and ensure it uses the existing active-state logic for both desktop and mobile nav variants."
         },
         {
           "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "create",
-          "description": "Create Dashboard screen with header and empty-state guidance (e.g., add vocab / start practice). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/PracticePage.tsx",
-          "operation": "create",
-          "description": "Create Practice screen shell with header and empty-state (prompt to sign in / add vocab to start). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/VocabularyPage.tsx",
-          "operation": "create",
-          "description": "Create Vocabulary screen shell with header and empty-state (prompt to add first item). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/SettingsPage.tsx",
-          "operation": "create",
-          "description": "Create Settings screen shell with header and empty-state (prompt to configure languages/profile). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/main.tsx",
           "operation": "modify",
-          "description": "Wire the new App shell/pages into the existing React entry point (ensure the created App.tsx is used by the import and renders successfully)."
+          "description": "Add a new quick action card/button linking to \"/conversation\" alongside the existing Practice Session and Vocabulary actions, matching the current dashboard card styling."
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Implement Internet Identity sign-in UX with personalized signed-in experience, profile setup, and sign-out clearing cached data.",
+      "id": "REQ-12",
+      "summary": "Evaluate each learner turn with deterministic tutor feedback and submit pass/fail via the existing submitPracticeResult flow tied to the vocabulary item used for that turn.",
       "acceptanceCriteria": [
-        "When not signed in, the UI presents a sign-in call-to-action and limits access to user-specific data.",
-        "After signing in with Internet Identity, the app displays the user principal (or a friendly derived identifier) and loads user data from the backend.",
-        "Signing out returns the UI to the signed-out state and clears cached user data from the UI."
+        "After the user sends a message, the UI evaluates the user message against one or more acceptable expected replies using deterministic matching (reusing the existing tutor feedback approach).",
+        "The user sees feedback in-app (correct/incorrect + hint/suggestion) consistent with the current TutorPanel style and copy tone (English).",
+        "Each conversation turn is associated with a specific vocabulary item used to generate that turn, and the app submits pass/fail using the existing submit practice result mutation so vocab stats/lastSeen update accordingly.",
+        "No new backend methods are required for this feature (it must work using existing queries/mutations and local UI state)."
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/auth/AuthGate.tsx",
-          "operation": "create",
-          "description": "Create an auth gate that uses the authorization component’s Internet Identity flow to restrict user-specific views when signed out, and shows a sign-in call-to-action/landing when not authenticated. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/LoginButton.tsx",
-          "operation": "create",
-          "description": "Add a login/logout button using the authorization component’s suggested Internet Identity handling pattern; on logout, clear cached react-query data. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
-          "operation": "create",
-          "description": "Create a react-query hook that loads getCallerUserProfile only when an authenticated actor is available (preventing profile modal flash per authorization component guidance). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/ProfileSetupModal.tsx",
-          "operation": "create",
-          "description": "Create first-login modal prompting for a human-readable name and saving it via saveCallerUserProfile; only show when authenticated and profile is missing. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/user/UserBadge.tsx",
-          "operation": "create",
-          "description": "Display a friendly identifier (prefer profile name; fallback to shortened principal string) in the app header when signed in. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Ensure identity changes trigger refresh of user-specific queries and that signed-out mode does not attempt to fetch restricted user data (keep anonymous actor behavior intact)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap routes/screens with AuthGate to limit access to user-specific data when signed out, and show personalized UI elements when signed in (user badge, active language/progress summary). Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Build Vocabulary UI to add/edit/delete entries and browse via searchable/filterable list.",
-      "acceptanceCriteria": [
-        "User can add a new vocabulary item and immediately see it in the list.",
-        "User can edit an item and the list reflects changes after save.",
-        "User can delete an item with a confirmation step.",
-        "List supports search by word/phrase and translation, and filter by tag (if tags are used)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useVocabulary.ts",
-          "operation": "create",
-          "description": "Create react-query hooks for loading vocabulary items (getAllVocabularyItems) and mutations for add/delete; provide cache updates/invalidations for immediate list refresh. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/vocabulary/VocabularyList.tsx",
-          "operation": "create",
-          "description": "Create a searchable list UI (search by word/translation) and optional tag filter chips; render empty state when no items. Compose shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/vocabulary/VocabularyFormDialog.tsx",
-          "operation": "create",
-          "description": "Create add/edit dialog form for vocabulary (word/translation/notes/tags). Use shadcn-ui dialog/form inputs; do not modify immutable UI component files. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/vocabulary/DeleteVocabularyConfirmDialog.tsx",
-          "operation": "create",
-          "description": "Create a confirmation dialog for deletion; upon confirm call deleteVocabularyItem and refresh list. Compose shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/VocabularyPage.tsx",
-          "operation": "modify",
-          "description": "Wire VocabularyList + add/edit/delete dialogs into the Vocabulary screen, including signed-out messaging via the auth gate when needed. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Create Practice flow that generates exercises from vocabulary, supports translation + fill-in-the-blank, provides feedback, and records results.",
-      "acceptanceCriteria": [
-        "Practice screen can start a session and presents one question at a time with an answer input.",
-        "Submitting an answer shows correct/incorrect feedback and reveals the expected answer.",
-        "Completing or skipping a question updates per-item stats in the backend.",
-        "Practice supports at least two exercise types and clearly labels which type is being shown."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/types/practice.ts",
-          "operation": "create",
-          "description": "Define frontend-only types for practice session state, exercise variants (translation, fill-in-the-blank), and result objects used by the UI. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/practice/generateExercises.ts",
-          "operation": "create",
-          "description": "Implement deterministic exercise generation from the user’s vocabulary (at least translation prompts and fill-in-the-blank templates) with clear labeling; avoid any external AI/LLM calls. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/usePracticeSession.ts",
-          "operation": "create",
-          "description": "Create a hook to manage practice session lifecycle (start, next, skip, submit) and to call submitPracticeResult for each completed/skipped item; integrate react-query invalidations so dashboard/vocab stats update after sessions. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/practice/PracticeCard.tsx",
-          "operation": "create",
-          "description": "Create the question UI (one at a time) with answer input, submit/skip controls, and visible feedback area; compose shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/PracticePage.tsx",
-          "operation": "modify",
-          "description": "Wire practice session start, rendering of PracticeCard, and post-answer feedback flow into the Practice screen; ensure empty state when no vocab is available. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Add AI-inspired Tutor feedback panel using deterministic heuristics (normalization, typo tolerance, simple hints) without external AI/LLM.",
-      "acceptanceCriteria": [
-        "After answering, the UI shows a Tutor panel with: normalized comparison (case/whitespace/diacritics handling), a brief hint on what differed, and a suggested corrected answer.",
-        "The system never calls external AI/LLM services; all feedback is generated locally (frontend) and/or in the Motoko backend using deterministic logic.",
-        "Typo tolerance can be demonstrated (e.g., small edit distance) and is documented in the UI/help tooltip."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/tutor/normalize.ts",
-          "operation": "create",
-          "description": "Implement deterministic normalization utilities (case-folding, trimming, whitespace collapsing, diacritics stripping) for answer comparison; no external services. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/tutor/editDistance.ts",
-          "operation": "create",
-          "description": "Implement small edit-distance (typo tolerance) calculation used to classify near-misses; keep deterministic and local-only. Verify the component's usage instructions before implementing."
-        },
         {
           "path": "frontend/src/utils/tutor/feedback.ts",
-          "operation": "create",
-          "description": "Generate Tutor feedback (diff summary, hint, corrected suggestion) using normalization + typo tolerance + simple word-order checks; ensure messaging explicitly notes deterministic heuristic approach. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/practice/TutorPanel.tsx",
-          "operation": "create",
-          "description": "Create a Tutor feedback panel UI shown after answer submission, including a tooltip/help text documenting typo tolerance and normalization behavior; compose shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/practice/PracticeCard.tsx",
           "operation": "modify",
-          "description": "Integrate TutorPanel into the post-answer UI, passing user answer + expected answer + computed feedback; ensure no external calls are introduced. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Add Progress/Dashboard metrics (today’s practice count, accuracy, items due) derived from persisted backend data and updated after practice.",
-      "acceptanceCriteria": [
-        "Dashboard displays at least 3 metrics: today’s answered count, accuracy %, and items due for review.",
-        "Metrics are derived from persisted backend data and update after a practice session.",
-        "If the user has no data, the dashboard shows an empty state with a clear next step (add vocab or start practice)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useDashboardMetrics.ts",
-          "operation": "create",
-          "description": "Create a hook that loads user profile and items due (getCallerUserProfile, getItemsDueForReview) and derives: today’s answered count (from persisted counters if available), accuracy % (from persisted per-item stats), and due count; expose empty-state conditions. Verify the component's usage instructions before implementing."
+          "description": "Extend deterministic tutor feedback generation to support evaluating a user reply against multiple acceptable expected answers (while keeping the current hint/suggestion tone in English), reusing the existing normalization + typo-tolerance approach."
         },
         {
-          "path": "frontend/src/components/dashboard/MetricsCards.tsx",
-          "operation": "create",
-          "description": "Render 3+ metric cards (today count, accuracy %, due for review) in a responsive grid; compose shadcn-ui card components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/pages/ConversationPage.tsx",
           "operation": "modify",
-          "description": "Wire metrics hook + MetricsCards into Dashboard; show empty state when no profile/vocab data; include clear next steps (add vocab/start practice). Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Apply a cohesive warm visual theme (no blue/purple-dominant primary) using Tailwind utilities and shadcn component composition.",
-      "acceptanceCriteria": [
-        "Theme is consistent across all screens (navigation, cards, buttons, forms).",
-        "Primary palette is not blue/purple-dominant.",
-        "UI uses Tailwind utility classes and shadcn components by composition (no direct edits to immutable UI component source files)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "create",
-          "description": "Define global CSS variables/theme tokens used by Tailwind + shadcn (warm primary such as amber/terracotta, complementary neutrals), base typography, and consistent spacing defaults; avoid blue/purple-dominant primary. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Adjust/extend Tailwind theme tokens if needed to support the warm palette, typography scale, and consistent card/button styling across screens (without relying on blue/purple as primary)."
-        },
-        {
-          "path": "frontend/src/components/layout/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Ensure layout applies consistent background, max-width container, and spacing utilities across all screens using Tailwind classes; keep shadcn-ui components unmodified (compose only). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/nav/TopNav.tsx",
-          "operation": "modify",
-          "description": "Apply theme-consistent navigation styling (active states, focus rings, spacing) with Tailwind utilities and shadcn composition. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Add generated static logo + hero assets under public assets and render them in Dashboard/sign-in layout responsively.",
-      "acceptanceCriteria": [
-        "Generated images exist under frontend/public/assets/generated and are referenced directly by the frontend (not served via backend).",
-        "Home/Dashboard (or landing/sign-in) includes the logo and hero illustration in a visually balanced layout.",
-        "Images scale appropriately for mobile and desktop without distortion."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/language-logo.dim_512x512.png",
-          "operation": "create",
-          "description": "Add the generated static wordmark logo asset at the required path for direct frontend use."
-        },
-        {
-          "path": "frontend/public/assets/generated/language-hero.dim_1600x900.png",
-          "operation": "create",
-          "description": "Add the generated static hero illustration asset at the required path for direct frontend use."
-        },
-        {
-          "path": "frontend/src/components/branding/BrandHeader.tsx",
-          "operation": "create",
-          "description": "Create a small branding component that renders the logo image with appropriate sizing/alt text and works across mobile/desktop. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/branding/HeroIllustration.tsx",
-          "operation": "create",
-          "description": "Create a responsive hero illustration component rendering frontend/public/assets/generated/language-hero.dim_1600x900.png with aspect-ratio-safe scaling (no distortion). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/AuthGate.tsx",
-          "operation": "modify",
-          "description": "Enhance signed-out landing view to include BrandHeader (logo) and HeroIllustration in a balanced responsive layout alongside the Internet Identity sign-in call-to-action. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Include BrandHeader (logo) and, where appropriate, the hero illustration in the Dashboard header/empty-state layout for a cohesive branded experience. Verify the component's usage instructions before implementing."
+          "description": "Implement per-turn evaluation and tutor feedback display: after the learner sends a message, compute pass/fail using deterministic matching against one or more acceptable expected replies, render feedback using the existing TutorPanel style, associate the turn to the vocabulary item that generated it, and submit pass/fail through the existing useSubmitPracticeResult mutation; keep full transcript in local UI state only (no backend persistence)."
         }
       ]
     }

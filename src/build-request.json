@@ -1,180 +1,77 @@
 {
   "kind": "build_request",
-  "title": "AI-inspired language learning web app (Tutor, exercises, progress)",
+  "title": "Add deterministic AI-style conversation practice mode",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a language-learning single-page web app with core navigation and screens: Home/Dashboard, Practice, Vocabulary, and Settings.",
+      "id": "REQ-10",
+      "text": "Add a new Conversation Practice mode that lets authenticated users practice short, turn-based text conversations using deterministic (non-LLM) logic and the user’s existing vocabulary.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
         ],
         "quotes": [
-          "puedes crear un pagina para aprender idiomas usando ia"
+          "pero pon una ia para practicar conversaciòn"
         ]
       },
       "acceptanceCriteria": [
-        "App loads successfully and shows a top-level navigation to Home/Dashboard, Practice, Vocabulary, and Settings.",
-        "Each screen has a clear header and empty-state content explaining what the user can do next.",
-        "All screens are responsive (mobile + desktop) and use consistent layout spacing."
+        "A new route exists at \"/conversation\" and is protected by the existing AuthGate behavior (unauthenticated users see the landing experience).",
+        "The Conversation page provides a chat-style UI with a clear start/reset flow and a visible indication of whose turn it is (Learner vs Partner).",
+        "Conversation prompts and expected responses are generated deterministically from the user’s vocabulary (and optional notes), without calling any external APIs.",
+        "When vocabulary is empty, the Conversation page shows an actionable empty state linking to \"/vocabulary\"."
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement Internet Identity sign-in and show a signed-in experience that personalizes the app (e.g., shows the active learning language and progress).",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "puedes crear un pagina para aprender idiomas usando ia"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When not signed in, the UI presents a sign-in call-to-action and limits access to user-specific data.",
-        "After signing in with Internet Identity, the app displays the user principal (or a friendly derived identifier) and loads user data from the backend.",
-        "Signing out returns the UI to the signed-out state and clears cached user data from the UI."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Add backend data models and persistence for user learning state: active source/target languages, vocabulary items, per-item stats (e.g., correct/incorrect counts, lastSeen), and overall practice history.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "puedes crear un pagina para aprender idiomas usando ia"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend exposes canister methods to get/update user settings (languages) and to CRUD vocabulary items.",
-        "Backend stores data per authenticated user principal and does not mix data between users.",
-        "Data remains available after page refresh and across sessions (stable storage)."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Build a Vocabulary feature that lets users add, edit, and delete vocabulary entries (word/phrase, translation, optional notes, tags), and view them in a searchable/filterable list.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "puedes crear un pagina para aprender idiomas usando ia"
-        ]
-      },
-      "acceptanceCriteria": [
-        "User can add a new vocabulary item and immediately see it in the list.",
-        "User can edit an item and the list reflects changes after save.",
-        "User can delete an item with a confirmation step.",
-        "List supports search by word/phrase and translation, and filter by tag (if tags are used)."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Create a Practice flow that generates short exercises from the user’s vocabulary and provides immediate feedback. Include at least: (1) translation (prompt -> answer), and (2) fill-in-the-blank from a template sentence.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "puedes crear un pagina para aprender idiomas usando ia"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Practice screen can start a session and presents one question at a time with an answer input.",
-        "Submitting an answer shows correct/incorrect feedback and reveals the expected answer.",
-        "Completing or skipping a question updates per-item stats in the backend.",
-        "Practice supports at least two exercise types and clearly labels which type is being shown."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Implement an AI-inspired “Tutor” feedback panel that explains mistakes using deterministic heuristics (e.g., normalization, typo tolerance, simple grammar/word-order hints) without calling any external LLM or third-party AI APIs.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "usando ia"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After answering, the UI shows a Tutor panel with: normalized comparison (case/whitespace/diacritics handling), a brief hint on what differed, and a suggested corrected answer.",
-        "The system never calls external AI/LLM services; all feedback is generated locally (frontend) and/or in the Motoko backend using deterministic logic.",
-        "Typo tolerance can be demonstrated (e.g., small edit distance) and is documented in the UI/help tooltip."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Add a Progress/Dashboard view showing daily practice count, accuracy, and a simple review queue size (items due based on lastSeen and performance).",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dashboard displays at least 3 metrics: today’s answered count, accuracy %, and items due for review.",
-        "Metrics are derived from persisted backend data and update after a practice session.",
-        "If the user has no data, the dashboard shows an empty state with a clear next step (add vocab or start practice)."
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Apply one coherent, creative visual theme across the app (colors, typography, components) suitable for a language-learning product, avoiding blue/purple as the primary palette unless explicitly requested later.",
+      "id": "REQ-11",
+      "text": "Expose Conversation Practice in the app navigation and dashboard so users can easily discover and start it.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
+        ],
+        "quotes": [
+          "pero pon una ia para practicar conversaciòn"
         ]
       },
       "acceptanceCriteria": [
-        "Theme is consistent across all screens (navigation, cards, buttons, forms).",
-        "Primary palette is not blue/purple-dominant.",
-        "UI uses Tailwind utility classes and shadcn components by composition (no direct edits to immutable UI component source files)."
+        "Top navigation includes a new link labeled \"Conversation\" that routes to \"/conversation\" and shows an active state when selected (desktop and mobile nav).",
+        "Dashboard includes a new quick action card/button that links to \"/conversation\" alongside the existing Practice and Vocabulary actions."
       ]
     },
     {
-      "id": "REQ-9",
-      "text": "Add generated static visual assets (logo + hero illustration) and render them in the app (e.g., on the Home/Dashboard and/or sign-in screen) from frontend/public/assets/generated.",
+      "id": "REQ-12",
+      "text": "Provide per-turn “AI Tutor” feedback for conversation replies using the existing deterministic tutor heuristics (normalization + typo tolerance), and record the turn outcome against the relevant vocabulary item using the existing practice-result submission flow.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
+        ],
+        "quotes": [
+          "pero pon una ia para practicar conversaciòn"
         ]
       },
       "acceptanceCriteria": [
-        "Generated images exist under frontend/public/assets/generated and are referenced directly by the frontend (not served via backend).",
-        "Home/Dashboard (or landing/sign-in) includes the logo and hero illustration in a visually balanced layout.",
-        "Images scale appropriately for mobile and desktop without distortion."
+        "After the user sends a message, the UI evaluates the user message against one or more acceptable expected replies using deterministic matching (reusing the existing tutor feedback approach).",
+        "The user sees feedback in-app (correct/incorrect + hint/suggestion) consistent with the current TutorPanel style and copy tone (English).",
+        "Each conversation turn is associated with a specific vocabulary item used to generate that turn, and the app submits pass/fail using the existing submit practice result mutation so vocab stats/lastSeen update accordingly.",
+        "No new backend methods are required for this feature (it must work using existing queries/mutations and local UI state)."
       ]
     }
   ],
   "constraints": [
-    "Do not integrate external LLM/AI providers or APIs (e.g., OpenAI/Anthropic).",
-    "Backend must remain a single Motoko actor (single-actor architecture).",
-    "Do not modify files under frontend/src/components/ui or any other immutable paths; compose them instead."
+    "Do not call any external LLM or third-party AI APIs; the conversation coach must be fully deterministic/offline.",
+    "Do not modify files under frontend/src/components/ui, frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
+    "Backend must remain single-actor; introduce backend changes only if strictly necessary (prefer reusing existing submitPracticeResult for stats)."
   ],
   "nonGoals": [
-    "Speech recognition, text-to-speech, or pronunciation scoring.",
-    "Real-time chat or multiplayer features.",
-    "Third-party OAuth providers beyond Internet Identity.",
-    "Importing lessons from external platforms or using external databases."
+    "Voice/speech input or pronunciation scoring.",
+    "Real-time chat, WebSockets, or multi-user conversations.",
+    "Third-party authentication beyond Internet Identity.",
+    "Persisting full chat transcripts on the backend (local session UI state is sufficient for now)."
   ],
   "imageRequirements": {
-    "required": [
-      "Minimalist wordmark logo, warm modern style (language-logo.dim_512x512.png)",
-      "Friendly hero illustration of language learning (books, chat bubbles, globe), flat vector style (language-hero.dim_1600x900.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

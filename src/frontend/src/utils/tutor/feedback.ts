@@ -64,3 +64,43 @@ export function generateFeedback(userAnswer: string, expectedAnswer: string): Fe
     suggestion: `The correct answer is "${expectedAnswer}".`,
   };
 }
+
+export function generateFeedbackForMultipleAnswers(userAnswer: string, acceptableAnswers: string[]): Feedback {
+  for (const expectedAnswer of acceptableAnswers) {
+    if (areAnswersEquivalent(userAnswer, expectedAnswer)) {
+      return {
+        isCorrect: true,
+        hint: 'Perfect! Your answer is correct.',
+        suggestion: '',
+      };
+    }
+  }
+
+  let bestFeedback: Feedback | null = null;
+  let bestDistance = Infinity;
+
+  for (const expectedAnswer of acceptableAnswers) {
+    const normalizedUser = normalize(userAnswer);
+    const normalizedExpected = normalize(expectedAnswer);
+    const distance = levenshteinDistance(normalizedUser, normalizedExpected);
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestFeedback = generateFeedback(userAnswer, expectedAnswer);
+    }
+  }
+
+  if (bestFeedback && acceptableAnswers.length > 1) {
+    const allAnswers = acceptableAnswers.join('" or "');
+    bestFeedback.suggestion = bestFeedback.suggestion.replace(
+      /The correct answer is "([^"]+)"\./,
+      `Acceptable answers include: "${allAnswers}".`
+    );
+  }
+
+  return bestFeedback || {
+    isCorrect: false,
+    hint: 'Not quite right. Try again.',
+    suggestion: `Acceptable answers include: "${acceptableAnswers.join('" or "')}".`,
+  };
+}

@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import PracticePage from './pages/PracticePage';
 import VocabularyPage from './pages/VocabularyPage';
 import SettingsPage from './pages/SettingsPage';
+import ConversationPage from './pages/ConversationPage';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -39,11 +40,18 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 });
 
+const conversationRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/conversation',
+  component: ConversationPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   practiceRoute,
   vocabularyRoute,
   settingsRoute,
+  conversationRoute,
 ]);
 
 const router = createRouter({ routeTree });

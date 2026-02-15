@@ -1,11 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "Build a web page/app for learning languages using AI.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Minimalist wordmark logo, warm modern style (language-logo.dim_512x512.png)\n- Friendly hero illustration of language learning (books, chat bubbles, globe), flat vector style (language-hero.dim_1600x900.png)",
   "existing_features": [
     {
       "id": "feature-create-a-language-learning-single-page-web-app-with-core-navigation-and-screens-home-dashboard-practice-vocabulary-and-settings",
@@ -70,6 +69,30 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-new-conversation-practice-mode-that-lets-authenticated-users-practice-short-turn-based-text-conversations-using-deterministic-non-llm-logic-and-the-user-s-existing-vocabulary",
+      "title": "Add a new Conversation Practice mode that lets authenticated users practice short, turn-based text conversations using deterministic (non-LLM) logic and the user’s existing vocabulary.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-conversation-practice-in-the-app-navigation-and-dashboard-so-users-can-easily-discover-and-start-it",
+      "title": "Expose Conversation Practice in the app navigation and dashboard so users can easily discover and start it.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-per-turn-ai-tutor-feedback-for-conversation-replies-using-the-existing-deterministic-tutor-heuristics-normalization-typo-tolerance-and-record-the-turn-outcome-against-the-relevant-vocabulary-item-using-the-existing-practice-result-submission-flow",
+      "title": "Provide per-turn “AI Tutor” feedback for conversation replies using the existing deterministic tutor heuristics (normalization + typo tolerance), and record the turn outcome against the relevant vocabulary item using the existing practice-result submission flow.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -85,6 +108,12 @@
       "reqIds": [
         "REQ-3"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add an AI-driven conversation practice mode (chat-based speaking/writing practice) for language learners.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

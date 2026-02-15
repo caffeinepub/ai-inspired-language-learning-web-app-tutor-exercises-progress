@@ -7,7 +7,7 @@ import MetricsCards from '@/components/dashboard/MetricsCards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from '@tanstack/react-router';
-import { BookOpen, Plus, TrendingUp } from 'lucide-react';
+import { BookOpen, Plus, TrendingUp, MessageCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
@@ -45,7 +45,7 @@ export default function DashboardPage() {
           <>
             <MetricsCards todayCount={todayCount} accuracy={accuracy} dueCount={dueCount} />
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-3">
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
@@ -57,6 +57,23 @@ export default function DashboardPage() {
                 <CardContent>
                   <Link to="/practice">
                     <Button className="w-full">Start Practice</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageCircle className="h-5 w-5 text-primary" />
+                    <CardTitle>Conversation</CardTitle>
+                  </div>
+                  <CardDescription>Practice real conversations with your vocabulary</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/conversation">
+                    <Button variant="outline" className="w-full">
+                      Start Conversation
+                    </Button>
                   </Link>
                 </CardContent>
               </Card>

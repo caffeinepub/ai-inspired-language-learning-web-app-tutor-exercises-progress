@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { BookOpen, Home, Library, Settings } from 'lucide-react';
+import { BookOpen, Home, Library, Settings, MessageCircle } from 'lucide-react';
 import LoginButton from '../auth/LoginButton';
 import UserBadge from '../user/UserBadge';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
@@ -14,6 +14,7 @@ export default function TopNav() {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
     { path: '/practice', label: 'Practice', icon: BookOpen },
+    { path: '/conversation', label: 'Conversation', icon: MessageCircle },
     { path: '/vocabulary', label: 'Vocabulary', icon: Library },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
